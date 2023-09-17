@@ -31,6 +31,11 @@ The greeting message will be stored in the contract and an event will be emitted
 Input the desired donation amount in Ether into the designated field.
 Press the "Donate" button to send a donation to the smart contract.
 The donation will increase the contract's balance and trigger an event.
+###StoreData
+The storeData function is an external Solidity function that allows the storage of a string provided as an argument. It takes a string called data as a parameter, stores it in a variable named storedData, and emits an event DataStored to notify when the data has been stored. This function modifies the contract's state.
+###RetrieveData
+The retrieveData function is an external Solidity function that allows retrieving the stored string. It returns the current value of storedData which was previously set using the storeData function.
+
 Technologies Used
 ### HTML: The structure of the web page and user interface elements.
 ### JavaScript: Programming language for dynamic functionality and interaction.
@@ -42,4 +47,4 @@ This project is licensed under the MIT License. For more information, see the LI
 ## Acknowledgements
 Special thanks to the developers of Web3.js and the creators of Metamask for their invaluable tools and resources.
 ## Loom video 
-https://www.loom.com/share/516ad662ac0d4f2d81c64bca1a45384d?sid=fb69b772-b628-4e93-bd25-89c767424150 
+https://www.loom.com/share/c476c02534eb4918aaedcf8722805f59?sid=5dbe9c75-d6fa-41ba-ae77-4475fb82d2f2
