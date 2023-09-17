@@ -31,8 +31,10 @@ The greeting message will be stored in the contract and an event will be emitted
 Input the desired donation amount in Ether into the designated field.
 Press the "Donate" button to send a donation to the smart contract.
 The donation will increase the contract's balance and trigger an event.
+
 ###StoreData
 The storeData function is an external Solidity function that allows the storage of a string provided as an argument. It takes a string called data as a parameter, stores it in a variable named storedData, and emits an event DataStored to notify when the data has been stored. This function modifies the contract's state.
+
 ###RetrieveData
 The retrieveData function is an external Solidity function that allows retrieving the stored string. It returns the current value of storedData which was previously set using the storeData function.
 
