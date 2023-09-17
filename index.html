@@ -79,6 +79,13 @@
     <label for="donationAmount">Donation Amount (Ether):</label>
     <input type="number" step="0.01" id="donationAmount" /><br />
     <button onclick="donate()">Donate</button>
+
+    <h2>Store and Retrieve Data</h2>
+    <label for="dataToStore">Data to Store:</label>
+    <input type="text" id="dataToStore" /><br />
+    <button onclick="storeData()">Store Data</button>
+
+    <button onclick="retrieveData()">Retrieve Data</button>
     <script>
       let account;
 
@@ -94,67 +101,112 @@
 
       const connectContract = async () => {
         const ABI = [
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "DonationReceived",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "greeting",
-				"type": "string"
-			}
-		],
-		"name": "GreetingPrinted",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "greeting",
-				"type": "string"
-			}
-		],
-		"name": "printGreeting",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "receiveDonation",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	}
-]
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: true,
+                internalType: "address",
+                name: "sender",
+                type: "address",
+              },
+              {
+                indexed: false,
+                internalType: "string",
+                name: "data",
+                type: "string",
+              },
+            ],
+            name: "DataStored",
+            type: "event",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: true,
+                internalType: "address",
+                name: "sender",
+                type: "address",
+              },
+              {
+                indexed: false,
+                internalType: "uint256",
+                name: "amount",
+                type: "uint256",
+              },
+            ],
+            name: "DonationReceived",
+            type: "event",
+          },
+          {
+            anonymous: false,
+            inputs: [
+              {
+                indexed: true,
+                internalType: "address",
+                name: "sender",
+                type: "address",
+              },
+              {
+                indexed: false,
+                internalType: "string",
+                name: "greeting",
+                type: "string",
+              },
+            ],
+            name: "GreetingPrinted",
+            type: "event",
+          },
+          {
+            inputs: [
+              {
+                internalType: "string",
+                name: "greeting",
+                type: "string",
+              },
+            ],
+            name: "printGreeting",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [],
+            name: "receiveDonation",
+            outputs: [],
+            stateMutability: "payable",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                internalType: "string",
+                name: "data",
+                type: "string",
+              },
+            ],
+            name: "storeData",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+          {
+            inputs: [],
+            name: "retrieveData",
+            outputs: [
+              {
+                internalType: "string",
+                name: "",
+                type: "string",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+          },
+        ];
 
-        const Address = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4";
+        const Address = "0xAffcac394Afbf3CD49629d0c1feCe00a1e99fc48";
         window.web3 = await new Web3(window.ethereum);
         contract = await new window.web3.eth.Contract(ABI, Address);
         document.getElementById("contractArea").innerHTML =
@@ -162,27 +214,51 @@
       };
 
       async function printGreeting() {
-            const greetingMessage = document.getElementById('greetingMessage').value;
+        const greetingMessage =
+          document.getElementById("greetingMessage").value;
 
-            await contract.methods.printGreeting(greetingMessage).send({ from: ethereum.selectedAddress });
-            alert(`Greeting printed successfully!`);
-        }
+        await contract.methods
+          .printGreeting(greetingMessage)
+          .send({ from: ethereum.selectedAddress });
+        alert(`Greeting printed successfully!`);
+      }
 
-        async function donate() {
-            const donationAmount = web3.utils.toWei(document.getElementById('donationAmount').value, 'ether');
+      async function donate() {
+        const donationAmount = web3.utils.toWei(
+          document.getElementById("donationAmount").value,
+          "ether"
+        );
 
-            await contract.methods.receiveDonation().send({ from: ethereum.selectedAddress, value: donationAmount });
-            alert(`Donation of ${donationAmount} Ether received!`);
-        }
+        await contract.methods
+          .receiveDonation()
+          .send({ from: ethereum.selectedAddress, value: donationAmount });
+        alert(`Donation of ${donationAmount} Ether received!`);
+      }
 
-        ethereum
-            .request({ method: 'eth_requestAccounts' })
-            .then(() => {
-                // Your Ethereum account is now connected
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+      async function storeData() {
+        const dataToStore = document.getElementById("dataToStore").value;
+
+        await contract.methods
+          .storeData(dataToStore)
+          .send({ from: ethereum.selectedAddress });
+        alert(`Data "${dataToStore}" has been stored successfully!`);
+      }
+
+      async function retrieveData() {
+        const result = await contract.methods
+          .retrieveData()
+          .call({ from: ethereum.selectedAddress });
+        alert(`Retrieved data: "${result}"`);
+      }
+
+      ethereum
+        .request({ method: "eth_requestAccounts" })
+        .then(() => {
+          // Your Ethereum account is now connected
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     </script>
   </body>
 </html>
